@@ -238,8 +238,10 @@ function catcher(result){
     jsonres = JSON.parse(result);
     console.log("catcher runner");
     setCookieWithExpireHour(tokencookiename,jsonres.login,tokencookiehourslifetime);
-    fillformLogin(jsonres);
-    submitLogin();
+    window.location.replace("http://iteung.ulbi.ac.id/dashboardbimbingan/");
+    // fillformLogin(jsonres);
+    // submitLogin();
+
   }
 }
 

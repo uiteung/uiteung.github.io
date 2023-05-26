@@ -244,7 +244,6 @@ function catcher(result){
   if (result.length > 2){
     jsonres = JSON.parse(result);
     console.log("catcher runner");
-    console.log(jsonres);
     ua = btoa(jsonres.user_id+"-"+jsonres.user_name);
     setCookieWithExpireHourSubDomain(tokencookiename,jsonres.login,tokencookiehourslifetime);
     setCookieWithExpireHourSubDomain("ua",ua,tokencookiehourslifetime);

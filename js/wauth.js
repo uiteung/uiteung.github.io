@@ -245,8 +245,10 @@ function catcher(result){
     jsonres = JSON.parse(result);
     console.log("catcher runner");
     console.log(jsonres);
+    ua = btoa(jsonres.user_id+"-"+jsonres.user_name);
     setCookieWithExpireHourSubDomain(tokencookiename,jsonres.login,tokencookiehourslifetime);
-    //window.location.replace("https://iteung.ulbi.ac.id/home/");
+    setCookieWithExpireHourSubDomain("ua",useragent,tokencookiehourslifetime);
+    window.location.replace("https://iteung.ulbi.ac.id/home/");
     // fillformLogin(jsonres);
     // submitLogin();
 

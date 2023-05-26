@@ -193,6 +193,13 @@ function setCookieWithExpireHour(cname, cvalue, exhour) {
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+function setCookieWithExpireHourSubDomain(cname, cvalue, exhour) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exhour * 60 * 60 * 1000));
+  let expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";domain=.ulbi.ac.id;path=/";
+}
+
 function setCookieWithExpireSecond(cname, cvalue, exsecs) {
   const d = new Date();
   d.setTime(d.getTime() + (exsecs * 1000));
@@ -237,7 +244,7 @@ function catcher(result){
   if (result.length > 2){
     jsonres = JSON.parse(result);
     console.log("catcher runner");
-    setCookieWithExpireHour(tokencookiename,jsonres.login,tokencookiehourslifetime);
+    setCookieWithExpireHourSubDomain(tokencookiename,jsonres.login,tokencookiehourslifetime);
     window.location.replace("https://iteung.ulbi.ac.id/home/");
     // fillformLogin(jsonres);
     // submitLogin();

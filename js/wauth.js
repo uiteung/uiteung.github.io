@@ -246,7 +246,7 @@ function catcher(result){
     console.log("catcher runner");
     console.log(jsonres);
     setCookieWithExpireHourSubDomain(tokencookiename,jsonres.login,tokencookiehourslifetime);
-    window.location.replace("https://iteung.ulbi.ac.id/home/");
+    //window.location.replace("https://iteung.ulbi.ac.id/home/");
     // fillformLogin(jsonres);
     // submitLogin();
 

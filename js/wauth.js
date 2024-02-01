@@ -121,7 +121,7 @@ function generatePassword() {
 function generateUUID(){
   let wuid;
   if (urlgetparams.uuid == null){
-    uuid=generatePassword()+"."+crypto.randomUUID()+"."+generatePassword()+"."+crypto.randomUUID()+"."+apphost;
+    uuid=+crypto.randomUUID()+"."+crypto.randomUUID()+"."+apphost;
     if (mobile){
       wuid = "m."+uuid;
     }else{

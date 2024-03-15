@@ -118,7 +118,7 @@ function generatePassword() {
   return password;
 }
 
-function generateUUID(){
+async function generateUUID(){
   let wuid;
   if (urlgetparams.uuid == null){
     uuid=+crypto.randomUUID()+"."+crypto.randomUUID()+"."+apphost;
@@ -152,7 +152,7 @@ function setCounterandQR(){
   if (countdown === 0) {
     closeWebSocket();
     countdown=interval;
-    uuid = generateUUID();
+    uuid = await generateUUID();
     waurl=atob(keyword)+uuid;
     showQR(waurl);
     openWebSocketSetId(uuid);

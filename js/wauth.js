@@ -161,7 +161,7 @@ function setCounterandQR(){
 }
 
 function makeQrCode(text){
-  qr = QRCode.generateSVG(text, {
+  const qrLocal = QRCode.generateSVG(text, {
       ecclevel: "M",
       fillcolor: "#FFFFFF",
       textcolor: "#000000",
@@ -169,7 +169,7 @@ function makeQrCode(text){
       modulesize: 8
   });
   var svg = document.getElementById(id_qr);
-	svg.replaceChild(qr,svg.firstElementChild);
+	svg.replaceChild(qrLocal, svg.firstElementChild);
 }
 
 function showQR(text){

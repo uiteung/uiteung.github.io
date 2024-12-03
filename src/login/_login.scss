@@ -1,0 +1,23 @@
+@use "../helpers/helpers" as h;
+@use "./sso/sso" as sso;
+@use "./qr/qr" as qr;
+
+.euis {
+  width: 70vw;
+  height: auto;
+  min-height: 80vh;
+  border-radius: 2rem;
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 0.85fr;
+  padding: 1.7rem 1.7rem 1.7rem 2.4rem;
+  gap: 2.4rem;
+
+  .sso {
+    @include sso.sso();
+  }
+
+  .qr {
+    @include qr.qr();
+  }
+}

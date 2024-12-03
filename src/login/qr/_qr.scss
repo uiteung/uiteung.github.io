@@ -1,0 +1,54 @@
+@use "../../helpers/helpers" as h;
+
+@mixin text-log($first: false) {
+  text-align: center;
+  font-weight: 700;
+  margin: 0.3rem 0 0.6rem;
+
+  @if $first {
+    margin-top: 0;
+  }
+
+  a {
+    color: h.$blue;
+  }
+}
+
+@mixin qr() {
+  background-color: h.$color-light;
+  padding: 2.4rem;
+  border-radius: 1.2rem;
+  @include h.flex();
+
+  #hasphonenumber {
+    @include h.flex();
+
+    .circle {
+      width: 19rem;
+
+      #useracclog {
+        @include text-log($first: true);
+      }
+
+      #whatsauthqr {
+        @include h.flex();
+
+        svg {
+          background-color: h.$color-light !important;
+
+          rect:first-child {
+            fill: h.$color-light;
+          }
+        }
+      }
+
+      #whatsauthcounter {
+        @include text-log();
+      }
+
+      #logs {
+        @include text-log();
+      }
+    }
+  }
+}

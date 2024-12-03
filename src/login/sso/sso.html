@@ -1,0 +1,33 @@
+<div class="sso-title">
+  <img src="src/assets/logo-bunga-default.jpg" alt="Logo ULBI" />
+  <div class="text">Euis ULBI</div>
+</div>
+<form class="sso-form needs-validation" id="sso-form" novalidate>
+  <div class="sso-form-container">
+    <label for="email" class="form-label">Email</label>
+    <input
+      type="email"
+      name="email"
+      id="email"
+      class="form-control"
+      autocomplete="email"
+      required
+    />
+    <div class="invalid-feedback w-100 text-end" style="font-size: 12px"></div>
+  </div>
+  <div class="sso-form-container">
+    <label for="password" class="form-label">Password</label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      class="form-control"
+      autocomplete="current-password"
+      required
+    />
+    <span class="material-symbols-rounded" id="hide-password"> visibility </span>
+    <div class="invalid-feedback w-100 text-end" style="font-size: 12px"></div>
+  </div>
+  <div class="sso-form-line"></div>
+  <button type="submit">Submit</button>
+</form>

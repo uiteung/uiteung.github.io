@@ -97,7 +97,7 @@ export function validation() {
           confirmButtonText: "Proceed",
         }).then(() => {
           // Redirect atau tindakan lain setelah login
-          // window.location.href = "https://euis.ulbi.ac.id/home/";
+          window.location.href = "https://euis.ulbi.ac.id/home/";
         });
       })
       .catch((error) => {

@@ -74,9 +74,21 @@ export function validation() {
         console.log(result.data);
 
         // Menetapkan cookie dengan token login
-        setCookie("login", result.token, 18); // Token berlaku 18 jam
+        const getToken = result.token;
+        if (getToken) {
+          setCookie("login", getToken, 18); // Token berlaku 18 jam
+        }
+
+        const getRoles = result.data.attributes.role;
+        const pegRole = getRoles.find((data) => data.Detail.id_role === "peg");
+        const role = pegRole.Detail.id_role;
+
+        if (role) {
+          setCookie("peg_role", role, 18); // Token berlaku 18 jam
+        }
 
         const name = result.data.attributes.nama;
+
         // Menampilkan pesan sukses menggunakan SweetAlert
         Swal.fire({
           icon: "success",
@@ -85,7 +97,7 @@ export function validation() {
           confirmButtonText: "Proceed",
         }).then(() => {
           // Redirect atau tindakan lain setelah login
-          window.location.href = "https://euis.ulbi.ac.id/home/";
+          // window.location.href = "https://euis.ulbi.ac.id/home/";
         });
       })
       .catch((error) => {

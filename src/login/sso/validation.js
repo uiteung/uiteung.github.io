@@ -80,10 +80,10 @@ export function validation() {
         }
 
         const getRoles = result.data.attributes.role;
-        const pegRole = getRoles.find((data) => data.Detail.id_role === "peg");
-        const role = pegRole.Detail.id_role;
+        const pegRole = getRoles.find((data) => data.Detail?.id_role === "peg");
 
-        if (role) {
+        if (pegRole) {
+          const role = pegRole.Detail.id_role;
           setCookie("peg_role", role, 18); // Token berlaku 18 jam
         }
 

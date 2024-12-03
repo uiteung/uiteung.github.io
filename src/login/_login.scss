@@ -21,3 +21,13 @@
     @include qr.qr();
   }
 }
+
+@media (max-width: 767.98px) {
+  .euis {
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, auto);
+    gap: 0;
+    padding: 2.6rem 3.2rem;
+  }
+}

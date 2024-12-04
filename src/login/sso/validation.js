@@ -71,8 +71,6 @@ export function validation() {
         .catch((error) => reject(error));
     })
       .then((result) => {
-        console.log(result.data);
-
         // Menetapkan cookie dengan token login
         const getToken = result.token;
         if (getToken) {
@@ -83,7 +81,7 @@ export function validation() {
         const setRole = getRoles.find((data) => data.Detail?.id_role !== "mhs");
 
         if (setRole) {
-          const role = setRole.Detail.id_role;
+          const role = setRole.Detail?.id_role;
           setCookie("set_role", role, 18); // Token berlaku 18 jam
         }
 

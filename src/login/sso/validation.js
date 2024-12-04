@@ -71,7 +71,7 @@ export function validation() {
         .catch((error) => reject(error));
     })
       .then((result) => {
-        console.log(result.data);
+        // console.log(result.data);
 
         // Menetapkan cookie dengan token login
         const getToken = result.token;
@@ -84,13 +84,11 @@ export function validation() {
           .filter((item) => item.Detail !== null)
           .filter((data) => data.Detail?.id_role !== "mhs");
 
-        console.log(setRole);
-
         if (setRole.length > 0) {
           const role = setRole[0].Detail.id_role;
 
           if (role !== undefined) {
-            setCookie("set_role", role, 18); // Token berlaku 18 jam
+            setCookie("user_role", role, 18); // Token berlaku 18 jam
           }
         }
 
@@ -104,7 +102,7 @@ export function validation() {
           confirmButtonText: "Proceed",
         }).then(() => {
           // Redirect atau tindakan lain setelah login
-          window.location.href = "https://euis.ulbi.ac.id/home/";
+          // window.location.href = "https://euis.ulbi.ac.id/home/";
         });
       })
       .catch((error) => {
@@ -118,12 +116,14 @@ export function validation() {
       });
   }
 
-  // Fungsi untuk menetapkan cookie
+  // Fungsi untuk menetapkan cookie dengan enkripsi
   function setCookie(name, value, hours) {
+    const key = "kecuali-mhs"; // Ganti dengan kunci enkripsi Anda
+    const encryptedValue = CryptoJS.AES.encrypt(value, key).toString();
     const date = new Date();
-    date.setTime(date.getTime() + hours * 60 * 60 * 1000); // Hitung waktu berlaku berdasarkan jam
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
     const expires = "expires=" + date.toUTCString();
-    document.cookie = `${name}=${value};${expires};path=/`;
+    document.cookie = `${name}=${encryptedValue};${expires};path=/`;
   }
 
   function capitalizeWords(str) {

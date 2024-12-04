@@ -71,6 +71,8 @@ export function validation() {
         .catch((error) => reject(error));
     })
       .then((result) => {
+        console.log(result.data);
+
         // Menetapkan cookie dengan token login
         const getToken = result.token;
         if (getToken) {
@@ -78,11 +80,18 @@ export function validation() {
         }
 
         const getRoles = result.data.attributes.role;
-        const setRole = getRoles.find((data) => data.Detail?.id_role !== "mhs");
+        const setRole = getRoles
+          .filter((item) => item.Detail !== null)
+          .filter((data) => data.Detail?.id_role !== "mhs");
 
-        if (setRole) {
-          const role = setRole.Detail?.id_role;
-          setCookie("set_role", role, 18); // Token berlaku 18 jam
+        console.log(setRole);
+
+        if (setRole.length > 0) {
+          const role = setRole[0].Detail.id_role;
+
+          if (role !== undefined) {
+            setCookie("set_role", role, 18); // Token berlaku 18 jam
+          }
         }
 
         const name = result.data.attributes.nama;

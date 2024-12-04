@@ -71,7 +71,7 @@ export function validation() {
         .catch((error) => reject(error));
     })
       .then((result) => {
-        // console.log(result.data);
+        console.log(result.data);
 
         // Menetapkan cookie dengan token login
         const getToken = result.token;
@@ -84,11 +84,13 @@ export function validation() {
           .filter((item) => item.Detail !== null)
           .filter((data) => data.Detail?.id_role !== "mhs");
 
+        console.log(setRole);
+
         if (setRole.length > 0) {
           const role = setRole[0].Detail.id_role;
 
           if (role !== undefined) {
-            setCookie("user_role", role, 18); // Token berlaku 18 jam
+            setEncCookie("user_role", role, 18); // Token berlaku 18 jam
           }
         }
 
@@ -116,8 +118,16 @@ export function validation() {
       });
   }
 
-  // Fungsi untuk menetapkan cookie dengan enkripsi
+  // Fungsi untuk menetapkan cookie
   function setCookie(name, value, hours) {
+    const date = new Date();
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000); // Hitung waktu berlaku berdasarkan jam
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `${name}=${value};${expires};path=/`;
+  }
+
+  // Fungsi untuk menetapkan cookie dengan enkripsi
+  function setEncCookie(name, value, hours) {
     const key = "kecuali-mhs"; // Ganti dengan kunci enkripsi Anda
     const encryptedValue = CryptoJS.AES.encrypt(value, key).toString();
     const date = new Date();

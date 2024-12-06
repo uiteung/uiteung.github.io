@@ -6,13 +6,13 @@ import { whatsauth } from "./qr/whatsauth.js";
 export async function main() {
   const promises = [
     loadComponent(".euis .sso", url.sso + "sso.html"),
-    loadComponent(".euis .qr", url.qr + "qr.html"),
+    // loadComponent(".euis .qr", url.qr + "qr.html"),
   ];
 
   Promise.all(promises)
     .then(() => {
       validation();
-      whatsauth();
+      // whatsauth();
     })
     .catch((error) => {
       console.error("Error loading components:", error);

@@ -2,6 +2,7 @@
 
 @mixin sso() {
   @include h.flex($direction: column);
+  width: 100%;
 
   &-title {
     @include h.flex($direction: column);

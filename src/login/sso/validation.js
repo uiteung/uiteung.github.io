@@ -80,16 +80,13 @@ export function validation() {
         }
 
         const getRoles = result.data.attributes.role;
-        const setRole = getRoles
-          .filter((item) => item.Detail !== null)
-          .filter((data) => data.Detail?.id_role !== "mhs");
+        const setRole = getRoles.filter((item) => item.Detail !== null);
 
-        console.log(setRole);
+        const role = setRole.map((data) => data.Detail.id_role);
+        console.log(role);
 
         if (setRole.length > 0) {
-          const role = setRole[0].Detail.id_role;
-
-          if (role !== undefined) {
+          if (setRole !== undefined) {
             setEncCookie("user_role", role, 18); // Token berlaku 18 jam
           }
         }
@@ -104,7 +101,7 @@ export function validation() {
           confirmButtonText: "Proceed",
         }).then(() => {
           // Redirect atau tindakan lain setelah login
-          window.location.href = "https://euis.ulbi.ac.id/home/";
+          // window.location.href = "https://euis.ulbi.ac.id/home/";
         });
       })
       .catch((error) => {
@@ -121,15 +118,19 @@ export function validation() {
   // Fungsi untuk menetapkan cookie
   function setCookie(name, value, hours) {
     const date = new Date();
-    date.setTime(date.getTime() + hours * 60 * 60 * 1000); // Hitung waktu berlaku berdasarkan jam
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000); // Konversi jam ke milidetik
     const expires = "expires=" + date.toUTCString();
-    document.cookie = `${name}=${value};${expires};path=/`;
+    document.cookie =
+      name + "=" + JSON.stringify(value) + ";" + expires + ";path=/";
   }
 
   // Fungsi untuk menetapkan cookie dengan enkripsi
   function setEncCookie(name, value, hours) {
-    const key = "kecuali-mhs"; // Ganti dengan kunci enkripsi Anda
-    const encryptedValue = CryptoJS.AES.encrypt(value, key).toString();
+    const key = "setting-role"; // Ganti dengan kunci enkripsi Anda
+    const encryptedValue = CryptoJS.AES.encrypt(
+      JSON.stringify(value),
+      key
+    ).toString(); // Ubah nilai menjadi string JSON sebelum dienkripsi
     const date = new Date();
     date.setTime(date.getTime() + hours * 60 * 60 * 1000);
     const expires = "expires=" + date.toUTCString();

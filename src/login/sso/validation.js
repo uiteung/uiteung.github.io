@@ -80,9 +80,9 @@ export function validation() {
         }
 
         const getRoles = result.data.attributes.role;
-        const setRole = getRoles.filter((item) => item.Detail !== null);
+        const setRole = getRoles.filter((item) => item !== null);
 
-        const role = setRole.map((data) => data.Detail.id_role);
+        const role = setRole.map((data) => data.id_role);
         console.log(role);
 
         if (setRole.length > 0) {

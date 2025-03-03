@@ -91,6 +91,15 @@ export function validation() {
           }
         }
 
+        const user_pbmp = result.data.attributes;
+        const setPbmpUser = getRoles.filter((item) => item !== null);
+
+        if (setPbmpUser.length > 0) {
+          if (setPbmpUser !== undefined) {
+            setPbmpCookie("usraes", user_pbmp, 18); // Token berlaku 18 jam
+          }
+        }
+
         const name = result.data.attributes.nama;
 
         // Menampilkan pesan sukses menggunakan SweetAlert
@@ -131,6 +140,18 @@ export function validation() {
       JSON.stringify(value),
       key
     ).toString(); // Ubah nilai menjadi string JSON sebelum dienkripsi
+    const date = new Date();
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `${name}=${encryptedValue};${expires};path=/`;
+  }
+
+  function setPbmpCookie(name, value, hours) {
+    const key = "#uLBi2025#";
+    const encryptedValue = CryptoJS.AES.encrypt(
+      JSON.stringify(value),
+      key
+    ).toString();
     const date = new Date();
     date.setTime(date.getTime() + hours * 60 * 60 * 1000);
     const expires = "expires=" + date.toUTCString();

@@ -14,38 +14,39 @@ export async function main() {
     // loadComponent(".euis .qr", url.qr + "qr.html"),
   ];
 
+  console.log("Checking for Google Code after reload...");
+
+  let googleCode = getGoogleCode();
+  console.log(googleCode);
+
+  if (googleCode) {
+    console.log("Google Code Detected from URL:", googleCode);
+
+    // Simpan kode di `localStorage` agar tetap tersedia setelah reload
+    localStorage.setItem("googleAuthCode", googleCode);
+
+    // Hapus parameter `code` dari URL untuk mencegah pengiriman ulang
+    const newUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, newUrl);
+
+    submitDataGoogle(googleCode);
+  } else {
+    console.log("Google Code Not Found in URL, Checking Local Storage...");
+
+    // Jika `code` tidak ditemukan di URL, ambil dari `localStorage`
+    const savedCode = localStorage.getItem("googleAuthCode");
+
+    if (savedCode) {
+      console.log("Using saved Google Code:", savedCode);
+      submitDataGoogle(savedCode);
+
+      // Hapus `code` dari `localStorage` setelah digunakan
+      localStorage.removeItem("googleAuthCode");
+    }
+  }
+
   Promise.all(promises)
     .then(() => {
-      console.log("Checking for Google Code after reload...");
-
-      let googleCode = getGoogleCode();
-      console.log(googleCode);
-
-      if (googleCode) {
-        console.log("Google Code Detected from URL:", googleCode);
-
-        // Simpan kode di `localStorage` agar tetap tersedia setelah reload
-        localStorage.setItem("googleAuthCode", googleCode);
-
-        // Hapus parameter `code` dari URL untuk mencegah pengiriman ulang
-        const newUrl = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, document.title, newUrl);
-
-        submitDataGoogle(googleCode);
-      } else {
-        console.log("Google Code Not Found in URL, Checking Local Storage...");
-
-        // Jika `code` tidak ditemukan di URL, ambil dari `localStorage`
-        const savedCode = localStorage.getItem("googleAuthCode");
-
-        if (savedCode) {
-          console.log("Using saved Google Code:", savedCode);
-          submitDataGoogle(savedCode);
-
-          // Hapus `code` dari `localStorage` setelah digunakan
-          localStorage.removeItem("googleAuthCode");
-        }
-      }
       googlelogin();
       validation();
     })

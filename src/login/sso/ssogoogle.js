@@ -24,7 +24,6 @@ export function getGoogleCode() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("code");
 }
-// **Cek otomatis setelah halaman reload**
 
 export function submitDataGoogle(googleCode) {
   console.log("Submitting Google Code:", googleCode);
@@ -46,6 +45,27 @@ export function submitDataGoogle(googleCode) {
       const getToken = result.token;
       if (getToken) {
         setCookieLogin("login", getToken, 4); // Simpan token dalam cookie selama 18 jam
+      }
+
+      const getRoles = result.role;
+      const setRole = getRoles.filter((item) => item !== null);
+
+      const role = setRole.map((data) => data.id_role);
+      console.log(role);
+
+      if (setRole.length > 0) {
+        if (setRole !== undefined) {
+          setRoleCookie("user_role", role, 18); // Token berlaku 18 jam
+        }
+      }
+
+      const user_pbmp = result.role;
+      const setPbmpUser = getRoles.filter((item) => item !== null);
+
+      if (setPbmpUser.length > 0) {
+        if (setPbmpUser !== undefined) {
+          setPbmpCookie("usraes", user_pbmp, 18); // Token berlaku 18 jam
+        }
       }
 
       Swal.fire({
@@ -72,5 +92,29 @@ export function submitDataGoogle(googleCode) {
     const expires = "expires=" + date.toUTCString();
     document.cookie =
       name + "=" + JSON.stringify(value) + ";" + expires + ";path=/";
+  }
+
+  function setRoleCookie(name, value, hours) {
+    const key = "setting-role"; // Ganti dengan kunci enkripsi Anda
+    const encryptedValue = CryptoJS.AES.encrypt(
+      JSON.stringify(value),
+      key
+    ).toString(); // Ubah nilai menjadi string JSON sebelum dienkripsi
+    const date = new Date();
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `${name}=${encryptedValue};${expires};path=/`;
+  }
+
+  function setPbmpCookie(name, value, hours) {
+    const key = "#uLBi2025#";
+    const encryptedValue = CryptoJS.AES.encrypt(
+      JSON.stringify(value),
+      key
+    ).toString();
+    const date = new Date();
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `${name}=${encryptedValue};${expires};path=/`;
   }
 }

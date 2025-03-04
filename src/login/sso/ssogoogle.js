@@ -68,10 +68,12 @@ export function submitDataGoogle(googleCode) {
         }
       }
 
+      const nama = user_pbmp.nama;
+
       Swal.fire({
         icon: "success",
         title: "Login Successful",
-        text: "Selamat Datang!",
+        text: `Selamat Datang ${nama}!`,
         confirmButtonText: "Proceed",
       }).then(() => {
         window.location.href = "https://euis.ulbi.ac.id/choose-role/";

@@ -68,7 +68,7 @@ export function submitDataGoogle(googleCode) {
         }
       }
 
-      const nama = user_pbmp.nama;
+      const nama = result.nama;
 
       Swal.fire({
         icon: "success",

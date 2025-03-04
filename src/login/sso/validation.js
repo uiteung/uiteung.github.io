@@ -18,6 +18,10 @@ export function validation() {
   // Validasi manual saat tombol submit ditekan
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (sessionStorage.getItem("googleLogin") === "true") {
+      console.log("Google login detected, skipping form validation...");
+      return; // Melewati validasi form jika Google Login digunakan
+    }
     hasSubmitted = true; // Set flag bahwa tombol submit sudah ditekan
     let isValid = true;
 

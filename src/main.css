@@ -91,6 +91,51 @@
   background-color: #fff;
   padding: 0 0.7rem;
 }
+
+.euis .google-form-line {
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+  margin-top: 0.8rem;
+  position: relative;
+}
+
+.euis .google-form-line::after {
+  content: "OR";
+  width: auto;
+  white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  color: #bac1cc;
+  background-color: #fff;
+  padding: 0 0.7rem;
+}
+
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border: 1px solid #dfdfdf;
+  border-radius: 4px;
+  color: #333333;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.google-btn img {
+  width: 30px;
+  margin-right: 10px;
+}
+
+.google-btn:hover {
+  background-color: #f1f1f1;
+}
 .euis .sso-form button {
   font-size: 14px;
   margin-top: 0.8rem;

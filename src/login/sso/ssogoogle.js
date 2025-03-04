@@ -41,7 +41,6 @@ export function submitDataGoogle(googleCode) {
       return response.json();
     })
     .then((result) => {
-      console.log("Login Result:", result);
       const getToken = result.token;
       if (getToken) {
         setCookieLogin("login", getToken, 4); // Simpan token dalam cookie selama 18 jam
@@ -59,9 +58,24 @@ export function submitDataGoogle(googleCode) {
         }
       }
 
-      const user_pbmp = result.role;
-      const setPbmpUser = getRoles.filter((item) => item !== null);
+      const email = result.email;
+      let user_pbmp = "";
+      fetch(`https://pbmp-be.ulbi.ac.id/pengguna?email=${email}`, {
+        method: "GET",
+        headers: {
+          login: result.token,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json()) // Ubah respons menjadi JSON
+        .then((data) => {
+          user_pbmp = data.data.attributes;
+        })
+        .catch((error) =>
+          console.error("Error fetching Google SSO URL:", error)
+        );
 
+      const setPbmpUser = getRoles.filter((item) => item !== null);
       if (setPbmpUser.length > 0) {
         if (setPbmpUser !== undefined) {
           setPbmpCookie("usraes", user_pbmp, 18); // Token berlaku 18 jam
@@ -118,5 +132,16 @@ export function submitDataGoogle(googleCode) {
     date.setTime(date.getTime() + hours * 60 * 60 * 1000);
     const expires = "expires=" + date.toUTCString();
     document.cookie = `${name}=${encryptedValue};${expires};path=/`;
+  }
+
+  function GetAttributesUser(email, token) {
+    let attributes;
+    fetch(`https://pbmp-be.ulbi.ac.id/pengguna?email${email}`)
+      .then((response) => response.json()) // Ubah respons menjadi JSON
+      .then((data) => {
+        attributes = data.data.attributes;
+      })
+      .catch((error) => console.error("Error fetching Google SSO URL:", error));
+    return attributes;
   }
 }

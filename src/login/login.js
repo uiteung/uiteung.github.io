@@ -30,20 +30,21 @@ export async function main() {
     window.history.replaceState({}, document.title, newUrl);
 
     submitDataGoogle(googleCode);
-  } else {
-    console.log("Google Code Not Found in URL, Checking Local Storage...");
-
-    // Jika `code` tidak ditemukan di URL, ambil dari `localStorage`
-    const savedCode = localStorage.getItem("googleAuthCode");
-
-    if (savedCode) {
-      console.log("Using saved Google Code:", savedCode);
-      submitDataGoogle(savedCode);
-
-      // Hapus `code` dari `localStorage` setelah digunakan
-      localStorage.removeItem("googleAuthCode");
-    }
   }
+  // else {
+  //   console.log("Google Code Not Found in URL, Checking Local Storage...");
+
+  //   // Jika `code` tidak ditemukan di URL, ambil dari `localStorage`
+  //   const savedCode = localStorage.getItem("googleAuthCode");
+
+  //   if (savedCode) {
+  //     console.log("Using saved Google Code:", savedCode);
+  //     submitDataGoogle(savedCode);
+
+  //     // Hapus `code` dari `localStorage` setelah digunakan
+  //     localStorage.removeItem("googleAuthCode");
+  //   }
+  // }
 
   Promise.all(promises)
     .then(() => {

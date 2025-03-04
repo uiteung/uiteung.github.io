@@ -2,9 +2,9 @@ export function googlelogin() {
   const googleLoginButton = document.getElementById("glbutton");
 
   googleLoginButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Mencegah tombol submit default
+    event.preventDefault(); // Mencegah form submit default
 
-    // Simpan informasi bahwa pengguna menggunakan Google Login
+    // Tandai bahwa pengguna sedang login dengan Google
     localStorage.setItem("googleLogin", "true");
 
     fetch("https://lulusan.ulbi.ac.id/sso/url/google")
@@ -25,31 +25,38 @@ export function googlelogin() {
     return urlParams.get("code");
   }
 
-  // Tunggu sampai halaman benar-benar dimuat sebelum membaca Google Code
-  window.onload = function () {
-    console.log("Checking for Google Code...");
+  // **Cek otomatis setelah halaman reload**
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("Checking for Google Code after reload...");
+
     let googleCode = getGoogleCode();
 
     if (googleCode) {
-      console.log("Google Code Detected:", googleCode);
+      console.log("Google Code Detected from URL:", googleCode);
+
+      // Simpan kode di `localStorage` agar tetap tersedia setelah reload
       localStorage.setItem("googleAuthCode", googleCode);
-      localStorage.removeItem("googleLogin"); // Hapus flag Google login
+
+      // Hapus parameter `code` dari URL untuk mencegah pengiriman ulang
+      const newUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+
       submitData(googleCode);
     } else {
-      console.log("Google Code Not Found, Retrying...");
-      setTimeout(() => {
-        googleCode = getGoogleCode();
-        if (googleCode) {
-          console.log("Google Code Found After Delay:", googleCode);
-          localStorage.setItem("googleAuthCode", googleCode);
-          localStorage.removeItem("googleLogin");
-          submitData(googleCode);
-        } else {
-          console.error("Failed to retrieve Google Code");
-        }
-      }, 1500); // Delay tambahan 1.5 detik untuk memastikan URL diperbarui
+      console.log("Google Code Not Found in URL, Checking Local Storage...");
+
+      // Jika `code` tidak ditemukan di URL, ambil dari `localStorage`
+      const savedCode = localStorage.getItem("googleAuthCode");
+
+      if (savedCode) {
+        console.log("Using saved Google Code:", savedCode);
+        submitData(savedCode);
+
+        // Hapus `code` dari `localStorage` setelah digunakan
+        localStorage.removeItem("googleAuthCode");
+      }
     }
-  };
+  });
 
   function submitData(googleCode) {
     console.log("Submitting Google Code:", googleCode);

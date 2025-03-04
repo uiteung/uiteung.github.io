@@ -65,4 +65,12 @@ export function submitDataGoogle(googleCode) {
       });
       console.error("Error:", error);
     });
+
+  function setCookie(name, value, hours) {
+    const date = new Date();
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000); // Konversi jam ke milidetik
+    const expires = "expires=" + date.toUTCString();
+    document.cookie =
+      name + "=" + JSON.stringify(value) + ";" + expires + ";path=/";
+  }
 }

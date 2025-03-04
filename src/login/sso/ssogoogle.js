@@ -45,7 +45,7 @@ export function submitDataGoogle(googleCode) {
       console.log("Login Result:", result);
       const getToken = result.token;
       if (getToken) {
-        setCookie("login", getToken, 18); // Simpan token dalam cookie selama 18 jam
+        setCookieLogin("login", getToken, 4); // Simpan token dalam cookie selama 18 jam
       }
 
       Swal.fire({
@@ -66,7 +66,7 @@ export function submitDataGoogle(googleCode) {
       console.error("Error:", error);
     });
 
-  function setCookie(name, value, hours) {
+  function setCookieLogin(name, value, hours) {
     const date = new Date();
     date.setTime(date.getTime() + hours * 60 * 60 * 1000); // Konversi jam ke milidetik
     const expires = "expires=" + date.toUTCString();

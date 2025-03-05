@@ -14,13 +14,13 @@ export async function main() {
     // loadComponent(".euis .qr", url.qr + "qr.html"),
   ];
 
-  console.log("Checking for Google Code after reload...");
+  // console.log("Checking for Google Code after reload...");
 
   let googleCode = getGoogleCode();
-  console.log(googleCode);
+  // console.log(googleCode);
 
   if (googleCode) {
-    console.log("Google Code Detected from URL:", googleCode);
+    // console.log("Google Code Detected from URL:", googleCode);
 
     // Simpan kode di `localStorage` agar tetap tersedia setelah reload
     localStorage.setItem("googleAuthCode", googleCode);

@@ -39,5 +39,5 @@ export function getCookie(cname) {
 }
 
 export function deleteCookie(cname) {
-  document.cookie = cname + "= ; Max-Age=0; path=/;";
+  document.cookie = cname + "= ; Max-Age=0; path=/; domain=.ulbi.ac.id;";
 }

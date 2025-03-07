@@ -16,6 +16,7 @@ export async function main() {
   let pbmp_token = getCookie("pbmp-token");
   let pbmp_login = getCookie("pbmp-login");
   if (pbmp_token && pbmp_login || pbmp_token || pbmp_login) {
+    console.log("destroying cookie...");
     deleteCookie("pbmp-token");
     deleteCookie("pbmp-login");
   }

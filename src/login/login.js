@@ -20,7 +20,7 @@ export async function main() {
   console.log(googleCode);
 
   if (googleCode) {
-    console.log("Google Code Detected from URL:", googleCode);
+    // console.log("Google Code Detected from URL:", googleCode);
 
     // Simpan kode di `localStorage` agar tetap tersedia setelah reload
     localStorage.setItem("googleAuthCode", googleCode);

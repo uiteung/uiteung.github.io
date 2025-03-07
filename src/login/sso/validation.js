@@ -27,10 +27,7 @@ export function validation() {
 
     // Validasi Email
     if (!emailInput.value.trim()) {
-      showError(emailInput, "Email is required.");
-      isValid = false;
-    } else if (!validateEmail(emailInput.value.trim())) {
-      showError(emailInput, "Please enter a valid email address.");
+      showError(emailInput, "Email/NIDN is required.");
       isValid = false;
     } else {
       hideError(emailInput);
@@ -47,7 +44,7 @@ export function validation() {
     // Submit form jika validasi lolos
     if (isValid) {
       const formData = {
-        email: emailInput.value.trim(),
+        nidn: emailInput.value.trim(),
         password: passwordInput.value.trim(),
       };
       submitData(formData);
@@ -185,8 +182,6 @@ export function validation() {
     if (input.id === "email") {
       if (!input.value.trim()) {
         showError(input, "Email is required.");
-      } else if (!validateEmail(input.value.trim())) {
-        showError(input, "Please enter a valid email address.");
       } else {
         hideError(input);
       }

@@ -10,7 +10,7 @@ export function googlelogin() {
     fetch("https://lulusan.ulbi.ac.id/sso/url/google")
       .then((response) => response.json()) // Ubah respons menjadi JSON
       .then((data) => {
-        console.log("Google Login URL:", data);
+        // console.log("Google Login URL:", data);
         if (data.data) {
           window.location.href = data.data; // Redirect ke Google OAuth
         } else {
@@ -26,7 +26,7 @@ export function getGoogleCode() {
 }
 
 export function submitDataGoogle(googleCode) {
-  console.log("Submitting Google Code:", googleCode);
+  // console.log("Submitting Google Code:", googleCode);
 
   fetch(`https://lulusan.ulbi.ac.id/sso/google?code=${googleCode}`, {
     method: "GET",

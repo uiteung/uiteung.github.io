@@ -1,4 +1,4 @@
-import loadComponent from "../helpers/loadComponent.js";
+import loadComponent, {deleteCookie, getCookie} from "../helpers/loadComponent.js";
 import { url } from "../helpers/urlConfig.js";
 import { validation } from "./sso/validation.js";
 import { whatsauth } from "./qr/whatsauth.js";
@@ -13,11 +13,13 @@ export async function main() {
     loadComponent(".euis .sso", url.sso + "sso.html"),
     // loadComponent(".euis .qr", url.qr + "qr.html"),
   ];
-
-  // console.log("Checking for Google Code after reload...");
-
+  let pbmp_token = getCookie("pbmp-token");
+  let pbmp_login = getCookie("pbmp-login");
+  if (pbmp_token && pbmp_login || pbmp_token || pbmp_login) {
+    deleteCookie("pbmp-token");
+    deleteCookie("pbmp-login");
+  }
   let googleCode = getGoogleCode();
-  // console.log(googleCode);
 
   if (googleCode) {
     // console.log("Google Code Detected from URL:", googleCode);
@@ -31,20 +33,6 @@ export async function main() {
 
     submitDataGoogle(googleCode);
   }
-  // else {
-  //   console.log("Google Code Not Found in URL, Checking Local Storage...");
-
-  //   // Jika `code` tidak ditemukan di URL, ambil dari `localStorage`
-  //   const savedCode = localStorage.getItem("googleAuthCode");
-
-  //   if (savedCode) {
-  //     console.log("Using saved Google Code:", savedCode);
-  //     submitDataGoogle(savedCode);
-
-  //     // Hapus `code` dari `localStorage` setelah digunakan
-  //     localStorage.removeItem("googleAuthCode");
-  //   }
-  // }
 
   Promise.all(promises)
     .then(() => {

@@ -39,5 +39,5 @@ export function getCookie(cname) {
 }
 
 export function deleteCookie(cname) {
-  document.cookie = cname + "= ; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = cname + "= ; Max-Age=0; path=/;";
 }

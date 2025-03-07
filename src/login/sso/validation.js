@@ -72,7 +72,7 @@ export function validation() {
         .catch((error) => reject(error));
     })
       .then((result) => {
-        console.log(result.data);
+        // console.log(result.data);
 
         // Menetapkan cookie dengan token login
         const getToken = result.token;
@@ -84,7 +84,7 @@ export function validation() {
         const setRole = getRoles.filter((item) => item !== null);
 
         const role = setRole.map((data) => data.id_role);
-        console.log(role);
+        // console.log(role);
 
         if (setRole.length > 0) {
           if (setRole !== undefined) {

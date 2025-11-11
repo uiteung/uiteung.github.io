@@ -44,7 +44,7 @@ export function validation() {
     // Submit form jika validasi lolos
     if (isValid) {
       const formData = {
-        nidn: emailInput.value.trim(),
+        email: emailInput.value.trim(),
         password: passwordInput.value.trim(),
       };
       submitData(formData);

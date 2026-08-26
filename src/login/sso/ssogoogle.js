@@ -45,20 +45,34 @@ export function submitDataGoogle(googleCode) {
       if (getToken) {
         setCookieLogin("login", getToken, 4); // Simpan token dalam cookie selama 18 jam
       }
+// testin
+      const email = result.email?.trim().toLowerCase();
 
-      const getRoles = result.role;
-      const setRole = getRoles.filter((item) => item !== null);
+      // Ambil role yang dikirim endpoint Google
+      const getRoles = Array.isArray(result.role) ? result.role : [];
 
-      const role = setRole.map((data) => data.id_role);
-      console.log(role);
+      const role = getRoles
+        .filter((item) => item !== null && item !== undefined)
+        .map((item) => item.id_role)
+        .filter(Boolean);
 
-      if (setRole.length > 0) {
-        if (setRole !== undefined) {
-          setRoleCookie("user_role", role, 18); // Token berlaku 18 jam
-        }
+      console.log(email);
+
+      // Tambahkan role dosen khusus untuk darfial@ulbi.ac.id
+      if (email === "darfial@ulbi.ac.id" && !role.includes("dosen")) {
+        role.push("dosen");
       }
 
-      const email = result.email;
+      // Hilangkan role duplikat
+      const uniqueRoles = [...new Set(role)];
+
+      console.log("Email Google:", email);
+      console.log("Role pengguna:", uniqueRoles);
+
+      // Simpan role ke cookie
+      if (uniqueRoles.length > 0) {
+        setRoleCookie("user_role", uniqueRoles, 18);
+      }
       let user_pbmp;
       fetch(`https://pbmp-be.ulbi.ac.id/pengguna?email=${email}`, {
         method: "GET",
@@ -78,7 +92,7 @@ export function submitDataGoogle(googleCode) {
           }
         })
         .catch((error) =>
-          console.error("Error fetching Google SSO URL:", error)
+          console.error("Error fetching Google SSO URL:", error),
         );
 
       const nama = result.nama;
@@ -113,7 +127,7 @@ export function submitDataGoogle(googleCode) {
     const key = "setting-role"; // Ganti dengan kunci enkripsi Anda
     const encryptedValue = CryptoJS.AES.encrypt(
       JSON.stringify(value),
-      key
+      key,
     ).toString(); // Ubah nilai menjadi string JSON sebelum dienkripsi
     const date = new Date();
     date.setTime(date.getTime() + hours * 60 * 60 * 1000);
@@ -125,7 +139,7 @@ export function submitDataGoogle(googleCode) {
     const key = "#uLBi2025#";
     const encryptedValue = CryptoJS.AES.encrypt(
       JSON.stringify(value),
-      key
+      key,
     ).toString();
     const date = new Date();
     date.setTime(date.getTime() + hours * 60 * 60 * 1000);

@@ -2,7 +2,6 @@ export function googlelogin() {
   const googleLoginButton = document.getElementById("glbutton");
 
   if (!googleLoginButton) {
-    console.error("[Google Login] Tombol #glbutton tidak ditemukan.");
     return;
   }
 
@@ -11,15 +10,9 @@ export function googlelogin() {
 
     localStorage.setItem("googleLogin", "true");
 
-    console.log("[Google Login] Meminta URL OAuth Google...");
-
     fetch("https://lulusan.ulbi.ac.id/sso/url/google")
       .then(async (response) => {
         const data = await response.json();
-
-        console.log("[Google Login URL] HTTP status:", response.status);
-        console.log("[Google Login URL] Full response:", data);
-        console.table(data);
 
         if (!response.ok) {
           throw new Error(
@@ -31,28 +24,22 @@ export function googlelogin() {
       })
       .then((data) => {
         if (data.data) {
-          console.log("[Google Login] Redirect URL:", data.data);
           window.location.href = data.data;
-        } else {
-          console.error(
-            "[Google Login] URL Google tidak ada pada data.data:",
-            data,
-          );
         }
       })
-      .catch((error) => {
-        console.error("[Google Login URL] Error:", error);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Gagal terhubung ke layanan Google. Silakan coba kembali.",
+        });
       });
   });
 }
 
 export function getGoogleCode() {
   const urlParams = new URLSearchParams(window.location.search);
-  const googleCode = urlParams.get("code");
-
-  console.log("[Google Callback] Code ditemukan:", googleCode);
-
-  return googleCode;
+  return urlParams.get("code");
 }
 
 export function submitDataGoogle(googleCode) {
@@ -60,11 +47,6 @@ export function submitDataGoogle(googleCode) {
     `https://lulusan.ulbi.ac.id/sso/google?code=${encodeURIComponent(
       googleCode,
     )}`;
-
-  console.group("[Google SSO] Proses login");
-  console.log("[Google SSO] Endpoint:", endpoint);
-  console.log("[Google SSO] Authorization code:", googleCode);
-  console.groupEnd();
 
   fetch(endpoint, {
     method: "GET",
@@ -77,29 +59,9 @@ export function submitDataGoogle(googleCode) {
 
       try {
         result = await response.json();
-      } catch (error) {
-        console.error(
-          "[Google SSO] Response bukan JSON yang valid:",
-          error,
-        );
-
+      } catch {
         throw new Error("Response Google SSO bukan JSON yang valid");
       }
-
-      console.group("[Google SSO] Response API");
-      console.log("HTTP status:", response.status);
-      console.log("HTTP OK:", response.ok);
-      console.log("Full result:", result);
-      console.log("result.token:", result?.token);
-      console.log("result.email:", result?.email);
-      console.log("result.nama:", result?.nama);
-      console.log("result.role:", result?.role);
-
-      if (Array.isArray(result?.role)) {
-        console.table(result.role);
-      }
-
-      console.groupEnd();
 
       if (!response.ok) {
         throw new Error(
@@ -111,110 +73,44 @@ export function submitDataGoogle(googleCode) {
       return result;
     })
     .then(async (result) => {
-      /*
-       * Simpan token login
-       */
       const getToken = result?.token;
 
       if (getToken) {
         setCookieLogin("login", getToken, 4);
-
-        console.log("[Cookie] Cookie login berhasil disimpan.");
-      } else {
-        console.warn("[Google SSO] Token tidak ditemukan:", result);
       }
 
-      /*
-       * Ambil email
-       */
       const email =
         typeof result?.email === "string"
           ? result.email.trim().toLowerCase()
           : "";
 
-      console.log("[Google SSO] Email setelah normalisasi:", email);
-
-      /*
-       * Ambil role dari response Google
-       */
       const getRoles = Array.isArray(result?.role)
         ? result.role
         : [];
-
-      console.group("[Role] Pengolahan role");
-      console.log("Role mentah dari API:", getRoles);
-
-      if (getRoles.length > 0) {
-        console.table(getRoles);
-      }
 
       const role = getRoles
         .filter((item) => item !== null && item !== undefined)
         .map((item) => item.id_role)
         .filter(Boolean);
 
-      console.log("ID role sebelum penambahan:", role);
-
-      /*
-       * Tambahkan dosen khusus untuk akun berikut
-       */
       if (
         email === "darfial@ulbi.ac.id" &&
         !role.includes("dosen")
       ) {
         role.push("dosen");
-
-        console.log(
-          "[Role] Role dosen ditambahkan untuk:",
-          email,
-        );
       }
 
       const uniqueRoles = [...new Set(role)];
 
-      console.log("Role akhir:", uniqueRoles);
-      console.groupEnd();
-
-      /*
-       * Simpan role ke cookie
-       */
       if (uniqueRoles.length > 0) {
         setRoleCookie("user_role", uniqueRoles, 18);
-
-        console.log(
-          "[Cookie] user_role berhasil disimpan:",
-          uniqueRoles,
-        );
-      } else {
-        console.warn(
-          "[Cookie] user_role tidak disimpan karena role kosong.",
-        );
       }
 
-      /*
-       * Ambil detail pengguna dari PBMP
-       */
       const userPbmp = await fetchPbmpUser(email, result.token);
 
       if (userPbmp) {
         setPbmpCookie("usraes", userPbmp, 18);
-
-        console.log(
-          "[Cookie] usraes berhasil disimpan:",
-          userPbmp,
-        );
       }
-
-      /*
-       * Tampilkan hasil akhir
-       */
-      console.group("[Google Login] Hasil akhir");
-      console.log("Nama:", result?.nama);
-      console.log("Email:", email);
-      console.log("Role awal:", getRoles);
-      console.log("Role akhir:", uniqueRoles);
-      console.log("User PBMP:", userPbmp);
-      console.groupEnd();
 
       return {
         result,
@@ -237,8 +133,6 @@ export function submitDataGoogle(googleCode) {
       });
     })
     .catch((error) => {
-      console.error("[Google Login] Proses login gagal:", error);
-
       Swal.fire({
         icon: "error",
         title: "Login Failed",
@@ -250,10 +144,6 @@ export function submitDataGoogle(googleCode) {
 
   async function fetchPbmpUser(email, token) {
     if (!email) {
-      console.warn(
-        "[PBMP API] Tidak dipanggil karena email kosong.",
-      );
-
       return null;
     }
 
@@ -261,8 +151,6 @@ export function submitDataGoogle(googleCode) {
       `https://pbmp-be.ulbi.ac.id/pengguna?email=${encodeURIComponent(
         email,
       )}`;
-
-    console.log("[PBMP API] Endpoint:", endpoint);
 
     try {
       const response = await fetch(endpoint, {
@@ -275,21 +163,6 @@ export function submitDataGoogle(googleCode) {
 
       const data = await response.json();
 
-      console.group("[PBMP API] Response");
-      console.log("HTTP status:", response.status);
-      console.log("HTTP OK:", response.ok);
-      console.log("Full response:", data);
-      console.log(
-        "data.data.attributes:",
-        data?.data?.attributes,
-      );
-
-      if (data?.data?.attributes) {
-        console.table(data.data.attributes);
-      }
-
-      console.groupEnd();
-
       if (!response.ok) {
         throw new Error(
           data?.message ||
@@ -297,33 +170,20 @@ export function submitDataGoogle(googleCode) {
         );
       }
 
-      if (!data?.data?.attributes) {
-        console.warn(
-          "[PBMP API] data.data.attributes tidak ditemukan:",
-          data,
-        );
-
-        return null;
-      }
-
-      return data.data.attributes;
-    } catch (error) {
-      console.error("[PBMP API] Error:", error);
+      return data?.data?.attributes || null;
+    } catch {
       return null;
     }
   }
 
   function setCookieLogin(name, value, hours) {
     const date = new Date();
-    date.setTime(
-      date.getTime() + hours * 60 * 60 * 1000,
-    );
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
 
     const expires = `expires=${date.toUTCString()}`;
 
     document.cookie =
-      `${name}=${JSON.stringify(value)};` +
-      `${expires};path=/`;
+      `${name}=${JSON.stringify(value)};${expires};path=/`;
   }
 
   function setRoleCookie(name, value, hours) {
@@ -335,9 +195,7 @@ export function submitDataGoogle(googleCode) {
     ).toString();
 
     const date = new Date();
-    date.setTime(
-      date.getTime() + hours * 60 * 60 * 1000,
-    );
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
 
     const expires = `expires=${date.toUTCString()}`;
 
@@ -354,9 +212,7 @@ export function submitDataGoogle(googleCode) {
     ).toString();
 
     const date = new Date();
-    date.setTime(
-      date.getTime() + hours * 60 * 60 * 1000,
-    );
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
 
     const expires = `expires=${date.toUTCString()}`;
 
